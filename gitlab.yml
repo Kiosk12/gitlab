@@ -1,0 +1,27 @@
+mysql:
+    image: sameersbn/mysql
+    volumes:
+        - /opt/mysql/data:/var/lib/mysql
+    environment:
+        - DB_NAME=gitlabhq_production 
+        - DB_USER=gitlab 
+        - DB_PASS=password
+redis:
+    image: sameersbn/redis
+gitlab:
+    image: sameersbn/gitlab
+    volumes:
+        - /opt/gitlab/data:/home/git/data
+    links:
+        - redis:redisio
+        - mysql:mysql
+    environment:
+        - GITLAB_PORT=80
+        - GITLAB_SSH_PORT=2222
+        - SMTP_USER=no-reply@example.com
+        - SMTP_PASS=password
+        - GITLAB_BACKUPS=daily
+        - GITLAB_HOST=gitlab.example.com
+    ports:
+        - "80:80"
+        - "2222:22"
